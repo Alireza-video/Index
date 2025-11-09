@@ -10,14 +10,13 @@
 
 <body class="bg-gradient-to-br from-blue-200 via-purple-200 to-blue-100 min-h-screen font-sans flex flex-col items-center relative">
 
-  <!-- Kielivalikko -->
+  <!-- Kiinteä kielivalikko oikeassa yläkulmassa -->
   <div class="fixed top-4 right-4 z-50">
-    <select id="language"
-            onchange="vaihdaKieli()"
-            class="p-2 text-sm sm:text-base rounded-md border border-gray-300 bg-white shadow-md hover:ring-2 hover:ring-blue-300 transition">
-      <option value="fi">Suomi</option>
-      <option value="sv">Svenska</option>
-      <option value="en">English</option>
+    <select id="language" onchange="vaihdaKieli()"
+            class="p-1 text-xs sm:p-2 sm:text-sm rounded-md border border-gray-300 bg-white shadow-md hover:ring-2 hover:ring-blue-300 transition">
+      <option value="fi">FI</option>
+      <option value="sv">SV</option>
+      <option value="en">EN</option>
     </select>
   </div>
 
