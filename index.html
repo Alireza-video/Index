@@ -96,12 +96,9 @@
                 </div>
             </div>
 
-            </div>
+        </div>
 
-        <button id="laskeNappi" onclick="laske()"
-            class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-2xl text-lg font-extrabold shadow-lg transition-all transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-indigo-300">
-            Laske
-        </button>
+        <div class="mt-8"></div>
 
         <div id="tulos"
             class="mt-8 bg-green-50 border-2 border-green-400 p-6 rounded-3xl shadow-xl text-center text-green-900 opacity-0 translate-y-3 transition-all duration-700">
@@ -126,10 +123,10 @@
                 palkka: "Kuukausipalkka (€)",
                 veroprosentti: "Veroprosentti (%)",
                 ika: "Ikä",
-                laske: "Laske",
+                laske: "Laske", // Säilytetty, mutta ei käytössä
                 kaateen: "Käteen jää (kk)",
                 vero: "Vero & maksut (kk)",
-                veroprosenttiTulos: "Veroprosentti",
+                kokonaisprosenttiTulos: "Kokonaisprosentti",
                 vuosiyhteenveto: "Vuositiedot",
                 vuositulo: "Vuosipalkka",
                 vuosivero: "Vero & maksut vuodessa",
@@ -143,10 +140,10 @@
                 palkka: "Månadslön (€)",
                 veroprosentti: "Skattesats (%)",
                 ika: "Ålder",
-                laske: "Beräkna",
+                laske: "Beräkna", // Säilytetty, mutta ei käytössä
                 kaateen: "Kvar (mån)",
                 vero: "Skatt & avgifter (mån)",
-                veroprosenttiTulos: "Skattesats",
+                kokonaisprosenttiTulos: "Total skattesats",
                 vuosiyhteenveto: "Årsöversikt",
                 vuositulo: "Årslön",
                 vuosivero: "Skatt & avgifter per år",
@@ -160,10 +157,10 @@
                 palkka: "Monthly Salary (€)",
                 veroprosentti: "Tax Rate (%)",
                 ika: "Age",
-                laske: "Calculate",
+                laske: "Calculate", // Säilytetty, mutta ei käytössä
                 kaateen: "Take-home (mo)",
                 vero: "Tax & Fees (mo)",
-                veroprosenttiTulos: "Tax Rate",
+                kokonaisprosenttiTulos: "Total Tax Rate",
                 vuosiyhteenveto: "Yearly Summary",
                 vuositulo: "Annual Salary",
                 vuosivero: "Annual Tax & Fees",
@@ -182,9 +179,10 @@
             document.getElementById("labelPalkka").innerText = t.palkka;
             document.getElementById("labelVeroProsentti").innerText = t.veroprosentti;
             document.getElementById("labelIka").innerText = t.ika;
-            document.getElementById("laskeNappi").innerText = t.laske;
+            // Nappi poistettu, joten tätä ei enää tarvita: document.getElementById("laskeNappi").innerText = t.laske;
             document.getElementById("varoitus").innerHTML = t.varoitus;
 
+            // Uudelleenlaskenta kielen vaihdon yhteydessä päivittää tuloksen tekstin
             if (document.getElementById("tulos").style.opacity === "1") {
                 laske();
             }
@@ -197,9 +195,8 @@
             const tulosDiv = document.getElementById("tulos");
             const t = texts[document.getElementById("language").value];
 
-            // --- Tarkista syötteiden kelpoisuus (estää virheilmoitukset automaattilaskennassa) ---
+            // --- Tarkista syötteet ---
             if (isNaN(palkka) || palkka <= 0 || isNaN(veroprosentti) || veroprosentti < 0 || veroprosentti > 100 || isNaN(ika) || ika < 1) {
-                // Piilota tuloslaatikko, jos syötteet ovat epätäydelliset tai virheelliset
                 tulosDiv.style.opacity = "0";
                 tulosDiv.style.transform = "translateY(10px)";
                 return;
@@ -255,7 +252,7 @@
                     <span>${verotJaMaksutKK.toFixed(2)} €</span>
                 </div>
                 <div class="flex justify-between text-base font-semibold text-gray-700">
-                    <span class="flex items-center"><i class="fas fa-percentage text-indigo-500 mr-2"></i> Kokonaisprosentti:</span>
+                    <span class="flex items-center"><i class="fas fa-percentage text-indigo-500 mr-2"></i> ${t.kokonaisprosenttiTulos}:</span>
                     <span>${veroprosenttiTotal.toFixed(1)}%</span>
                 </div>
 
@@ -282,6 +279,8 @@
 
         window.onload = () => {
             vaihdaKieli();
+            // Laske kerran sivun latautuessa, jotta placeholder-arvot näkyvät tuloksissa heti
+            laske();
         };
     </script>
 
