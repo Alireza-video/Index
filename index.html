@@ -10,7 +10,7 @@
 
 <body class="bg-gradient-to-br from-blue-200 via-purple-200 to-blue-100 min-h-screen font-sans flex flex-col items-center relative">
 
-  <!-- Kielivalikko: fixed on all screen sizes -->
+  <!-- Kielivalikko -->
   <div class="fixed top-4 right-4 z-50">
     <select id="language"
             onchange="vaihdaKieli()"
@@ -21,7 +21,7 @@
     </select>
   </div>
 
-  <!-- Otsikko vasemmalla / center on mobile -->
+  <!-- Otsikko -->
   <h1 id="otsikko"
       class="absolute sm:static top-8 left-8 sm:top-auto sm:left-auto text-3xl sm:text-5xl font-extrabold text-purple-500 tracking-tight drop-shadow-sm text-center sm:text-left mt-4 sm:mt-0">
       Nettopalkkalaskuri
@@ -39,13 +39,13 @@
     <div class="space-y-4 px-4 sm:px-0">
       <div>
         <label id="labelPalkka" for="palkka" class="block text-gray-700 font-semibold mb-1">Kuukausipalkka (€)</label>
-        <input id="palkka" type="number" step="0.01" min="0" placeholder=" 3500"
+        <input id="palkka" type="number" step="0.01" min="0" placeholder="3500"
                class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none transition shadow-sm">
       </div>
 
       <div>
         <label id="labelIka" for="ika" class="block text-gray-700 font-semibold mb-1">Ikä</label>
-        <input id="ika" type="number" step="1" min="0" placeholder=" 38"
+        <input id="ika" type="number" step="1" min="0" placeholder="38"
                class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none transition shadow-sm">
       </div>
 
@@ -103,10 +103,47 @@
         vuosivero: "Vero vuodessa",
         vuosinetto: "Käteen vuodessa",
         virhe: "Syötä palkka ja ikä oikein.",
-        varoitus: "Tämä nettolaskuri on suuntaa-antava. Se ei korvaa virallista veroneuvontaa tai verolaskuria. Lopullinen verotietosi voi poiketa laskurin tuloksista. Kehittäjä ei vastaa laskurin antamien tietojen virheellisyydestä, seurauksista tai päätöksistä, joita teet laskurin perusteella. Huom! Laskuri ei ota huomioon kaikkia mahdollisia vero- tai vähennyskohtia (esim. henkilökohtaiset vähennykset, eläkemaksut tai muut erityistapaukset)."
+        varoitus: "Tämä nettolaskuri on suuntaa-antava. Se ei korvaa virallista veroneuvontaa tai verolaskuria. Lopullinen verotietosi voi poiketa laskurin tuloksista. Kehittäjä ei vastaa laskurin antamien tietojen virheellisyydestä, seurauksista tai päätöksistä, joita teet laskurin perusteella. Huom! Laskuri ei ota huomioon kaikkia mahdollisia vero- tai vähennyskohtia (esim. henkilökohtaiset vähennykset, eläkemaksut tai muut erityistapaukset).",
+        kuntaValinnat: ["Helsinki", "Tampere", "Oulu", "Turku", "Muu Suomi"]
       },
-      sv: { /* same as before */ },
-      en: { /* same as before */ }
+      sv: {
+        otsikko: "Netto lönekalkylator",
+        otsikkoAlateksti: "Räkna ut hur mycket pengar som blir kvar efter skatt",
+        palkka: "Månadslön (€)",
+        ika: "Ålder",
+        kunta: "Stad",
+        kirkko: "Jag tillhör kyrkan",
+        laske: "Beräkna",
+        kaateen: "Kvar (mån)",
+        vero: "Skatt (mån)",
+        veroprosentti: "Beräknad skattesats",
+        vuosiyhteenveto: "Årsöversikt",
+        vuositulo: "Årslön",
+        vuosivero: "Årlig skatt",
+        vuosinetto: "Kvar per år",
+        virhe: "Ange lön och ålder korrekt.",
+        varoitus: "Denna nettolönskalkylator är vägledande. Den ersätter inte officiell skatterådgivning eller skatteberäknare. Dina slutliga skatteuppgifter kan skilja sig från kalkylatorns resultat. Utvecklaren ansvarar inte för eventuella fel eller konsekvenser av informationen i kalkylatorn. Observera! Kalkylatorn tar inte hänsyn till alla möjliga skatte- eller avdragssituationer (t.ex. personliga avdrag, pensionsavgifter eller andra särskilda fall).",
+        kuntaValinnat: ["Helsingfors", "Tammerfors", "Uleåborg", "Åbo", "Annat"]
+      },
+      en: {
+        otsikko: "Net Salary Calculator",
+        otsikkoAlateksti: "Calculate how much money you keep after taxes",
+        palkka: "Monthly Salary (€)",
+        ika: "Age",
+        kunta: "City",
+        kirkko: "I belong to the church",
+        laske: "Calculate",
+        kaateen: "Take-home (mo)",
+        vero: "Tax (mo)",
+        veroprosentti: "Estimated tax rate",
+        vuosiyhteenveto: "Yearly Summary",
+        vuositulo: "Annual Salary",
+        vuosivero: "Annual Tax",
+        vuosinetto: "Take-home per year",
+        virhe: "Please enter salary and age correctly.",
+        varoitus: "This net salary calculator is indicative. It does not replace official tax advice or calculators. Your final tax information may differ from the calculator results. The developer is not responsible for errors or consequences from the calculator. Note: The calculator does not consider all possible tax or deduction situations (e.g., personal deductions, pension contributions, or other special cases).",
+        kuntaValinnat: ["Helsinki", "Tampere", "Oulu", "Turku", "Other"]
+      }
     };
 
     function vaihdaKieli() {
@@ -121,6 +158,16 @@
       document.getElementById("labelKirkko").innerText = t.kirkko;
       document.getElementById("laskeNappi").innerText = t.laske;
       document.getElementById("varoitus").innerText = t.varoitus;
+
+      // Päivitä kunta-valikon vaihtoehdot
+      const kuntaSelect = document.getElementById("kunta");
+      kuntaSelect.innerHTML = "";
+      t.kuntaValinnat.forEach(k => {
+        const option = document.createElement("option");
+        option.value = k.includes("Muu") || k.includes("Other") ? "Muu" : k;
+        option.text = k;
+        kuntaSelect.appendChild(option);
+      });
 
       if (document.getElementById("tulos").innerHTML.trim() !== "") {
         laske();
