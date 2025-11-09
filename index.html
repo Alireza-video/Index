@@ -1,235 +1,337 @@
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-  <link rel="icon" href="favicon2.png" type="image/png">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nettopalkkalaskuri</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="favicon2.png" type="image/png">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nettopalkkalaskuri</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Määritellään parempi fontti ja siivotaan pieniä tyylejä */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Korjataan select- ja input-elementtien ulkonäkö */
+        input[type="number"], select {
+            border: 2px solid #D1D5DB;
+            transition: all 0.2s ease-in-out;
+        }
+
+        input[type="number"]:focus, select:focus {
+            border-color: #6366F1; /* Päivitetty sinisestä violettiin */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.4); /* Päivitetty sinisestä violettiin */
+        }
+
+        /* Piilotetaan nuoli input-kentistä (parempi estetiikka) */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
 </head>
 
-<body class="bg-gradient-to-br from-blue-200 via-purple-200 to-blue-100 min-h-screen font-sans flex flex-col items-center relative">
+<body class="bg-gradient-to-br from-blue-200 via-purple-300 to-indigo-200 min-h-screen font-sans flex flex-col items-center">
 
-  <!-- Kiinteä kielivalikko oikeassa yläkulmassa -->
-  <div class="fixed top-4 right-4 z-50">
-    <select id="language" onchange="vaihdaKieli()"
-            class="p-1 text-xs sm:p-2 sm:text-sm rounded-md border border-gray-300 bg-white shadow-md hover:ring-2 hover:ring-blue-300 transition">
-      <option value="fi">FI</option>
-      <option value="sv">SV</option>
-      <option value="en">EN</option>
-    </select>
-  </div>
-
-  <!-- Otsikko -->
-  <h1 id="otsikko"
-      class="absolute sm:static top-8 left-8 sm:top-auto sm:left-auto text-3xl sm:text-5xl font-extrabold text-purple-500 tracking-tight drop-shadow-sm text-center sm:text-left mt-4 sm:mt-0">
-      Nettopalkkalaskuri
-  </h1>
-
-  <!-- Pääboksin sisältö -->
-  <div class="w-full max-w-xs sm:max-w-lg p-6 sm:p-8 bg-white rounded-3xl shadow-2xl mt-32 relative" id="paaBoksi">
-
-    <!-- Otsikon ala-teksti -->
-    <p id="otsikkoAlateksti" class="text-center text-lg sm:text-2xl text-blue-700 font-bold mb-6">
-      Laske, paljonko sinulle jää rahaa verojen jälkeen
-    </p>
-
-    <!-- Syöttökentät -->
-    <div class="space-y-4 px-4 sm:px-0">
-      <div>
-        <label id="labelPalkka" for="palkka" class="block text-gray-700 font-semibold mb-1">Kuukausipalkka (€)</label>
-        <input id="palkka" type="number" step="0.01" min="0" placeholder="3500"
-               class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none transition shadow-sm">
-      </div>
-
-      <div>
-        <label id="labelIka" for="ika" class="block text-gray-700 font-semibold mb-1">Ikä</label>
-        <input id="ika" type="number" step="1" min="0" placeholder="38"
-               class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none transition shadow-sm">
-      </div>
-
-      <div>
-        <label id="labelKunta" for="kunta" class="block text-gray-700 font-semibold mb-1">Kaupunki</label>
-        <select id="kunta" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none transition shadow-sm">
-          <option value="Helsinki">Helsinki</option>
-          <option value="Tampere">Tampere</option>
-          <option value="Oulu">Oulu</option>
-          <option value="Turku">Turku</option>
-          <option value="Muu">Muu Suomi</option>
+    <div class="fixed top-4 right-4 z-50">
+        <select id="language" onchange="vaihdaKieli()"
+            class="p-2 text-sm rounded-lg border-2 border-purple-400 bg-white shadow-lg hover:border-purple-600 transition cursor-pointer text-gray-700">
+            <option value="fi">FI</option>
+            <option value="sv">SV</option>
+            <option value="en">EN</option>
         </select>
-      </div>
-
-      <div class="flex items-center space-x-2">
-        <input id="kirkollisvero" type="checkbox" class="accent-blue-600 w-5 h-5">
-        <label id="labelKirkko" for="kirkollisvero" class="text-gray-700 font-semibold">Kuulun kirkkoon</label>
-      </div>
     </div>
 
-    <!-- Laske-painike -->
-    <button id="laskeNappi" onclick="laske()"
-            class="mt-6 w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 rounded-2xl text-lg font-bold shadow-lg transition-all transform sm:hover:scale-105">
-      Laske
-    </button>
+    <header class="text-center mt-12 mb-8 sm:mt-20 sm:mb-12">
+        <h1 id="otsikko"
+            class="text-4xl sm:text-6xl font-extrabold text-indigo-700 tracking-tight drop-shadow-md">
+            Nettopalkkalaskuri
+        </h1>
+        <p id="otsikkoAlateksti" class="text-lg sm:text-xl text-purple-700 font-semibold mt-3">
+            Laske, paljonko sinulle jää rahaa verojen jälkeen
+        </p>
+    </header>
 
-    <!-- Tuloskortti -->
-    <div id="tulos"
-         class="mt-8 bg-gradient-to-r from-green-100 to-green-200 p-6 rounded-3xl shadow-lg text-center text-2xl font-bold text-green-800 opacity-0 translate-y-3 transition-all duration-700">
+    <div class="w-full max-w-xs sm:max-w-md p-6 sm:p-8 bg-white rounded-3xl shadow-xl border-t-4 border-indigo-500 relative" id="paaBoksi">
+
+        <div class="space-y-6">
+            <div>
+                <label id="labelPalkka" for="palkka" class="block text-gray-700 font-bold mb-2">Kuukausipalkka (€)</label>
+                <input id="palkka" type="number" step="0.01" min="0" placeholder="3800"
+                    class="w-full p-3 rounded-xl focus:outline-none shadow-inner bg-gray-50">
+            </div>
+
+            <div>
+                <label id="labelIka" for="ika" class="block text-gray-700 font-bold mb-2">Ikä</label>
+                <input id="ika" type="number" step="1" min="0" placeholder="38"
+                    class="w-full p-3 rounded-xl focus:outline-none shadow-inner bg-gray-50">
+            </div>
+
+            <div>
+                <label id="labelKunta" for="kunta" class="block text-gray-700 font-bold mb-2">Kaupunki</label>
+                <select id="kunta"
+                    class="w-full p-3 rounded-xl focus:outline-none shadow-inner bg-gray-50">
+                    <option value="Helsinki">Helsinki</option>
+                    <option value="Tampere">Tampere</option>
+                    <option value="Oulu">Oulu</option>
+                    <option value="Turku">Turku</option>
+                    <option value="Muu">Muu Suomi (Keskiarvo)</option>
+                </select>
+            </div>
+
+            <div class="flex items-center space-x-3 pt-2">
+                <input id="kirkollisvero" type="checkbox" class="accent-indigo-600 w-5 h-5 rounded cursor-pointer">
+                <label id="labelKirkko" for="kirkollisvero" class="text-gray-700 font-semibold">Kuulun kirkkoon</label>
+            </div>
+        </div>
+
+        <button id="laskeNappi" onclick="laske()"
+            class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-2xl text-lg font-extrabold shadow-lg transition-all transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-indigo-300">
+            Laske
+        </button>
+
+        <div id="tulos"
+            class="mt-8 bg-green-50 border-2 border-green-400 p-6 rounded-3xl shadow-xl text-center text-green-900 opacity-0 translate-y-3 transition-all duration-700">
+        </div>
+
     </div>
 
-  </div>
+    <div id="varoitus"
+        class="px-4 sm:px-0 mt-8 max-w-full sm:max-w-xl text-justify text-sm rounded-md text-gray-700 leading-relaxed mx-auto">
+        Tämä nettolaskuri on **suuntaa-antava**. Se ei korvaa virallista veroneuvontaa tai Verohallinnon laskuria. Laskuri käyttää **arvioituja vuoden 2025 veroprosentteja** ja sisältää vain **yleisimmät lakisääteiset vähennykset** (TyEL, työttömyysvakuutus ja työtulovähennys). Se ei ota huomioon kaikkia henkilökohtaisia vähennyksiä (esim. matkakulut tai kotitalousvähennys) tai verokortin tulorajoja. Kehittäjä ei vastaa laskurin antamien tietojen virheellisyydestä.
+    </div>
 
-  <!-- Lailliset varoitukset -->
-  <div id="varoitus"
-       class="px-4 sm:px-6 mt-4 max-w-full sm:max-w-[840px] text-justify text-xs rounded-md text-gray-900">
-    Tämä nettolaskuri on suuntaa-antava. Se ei korvaa virallista veroneuvontaa tai verolaskuria. Lopullinen verotietosi voi poiketa laskurin tuloksista. Kehittäjä ei vastaa laskurin antamien tietojen virheellisyydestä, seurauksista tai päätöksistä, joita teet laskurin perusteella. Huom! Laskuri ei ota huomioon kaikkia mahdollisia vero- tai vähennyskohtia (esim. henkilökohtaiset vähennykset, eläkemaksut tai muut erityistapaukset).
-  </div>
+    <footer class="mt-12 mb-4 text-xs text-gray-500">
+        © 2025 Nettopalkkalaskuri. Kaikki oikeudet pidätetään.
+    </footer>
 
-  <script>
-    const texts = {
-      fi: {
-        otsikko: "Nettopalkkalaskuri",
-        otsikkoAlateksti: "Laske, paljonko sinulle jää rahaa verojen jälkeen",
-        palkka: "Kuukausipalkka (€)",
-        ika: "Ikä",
-        kunta: "Kaupunki",
-        kirkko: "Kuulun kirkkoon",
-        laske: "Laske",
-        kaateen: "Käteen jää (kk)",
-        vero: "Vero (kk)",
-        veroprosentti: "Arvioitu veroprosentti",
-        vuosiyhteenveto: "Vuositiedot",
-        vuositulo: "Vuosipalkka",
-        vuosivero: "Vero vuodessa",
-        vuosinetto: "Käteen vuodessa",
-        virhe: "Syötä palkka ja ikä oikein.",
-        varoitus: "Tämä nettolaskuri on suuntaa-antava. Se ei korvaa virallista veroneuvontaa tai verolaskuria. Lopullinen verotietosi voi poiketa laskurin tuloksista. Kehittäjä ei vastaa laskurin antamien tietojen virheellisyydestä, seurauksista tai päätöksistä, joita teet laskurin perusteella. Huom! Laskuri ei ota huomioon kaikkia mahdollisia vero- tai vähennyskohtia (esim. henkilökohtaiset vähennykset, eläkemaksut tai muut erityistapaukset).",
-        kuntaValinnat: ["Helsinki", "Tampere", "Oulu", "Turku", "Muu Suomi"]
-      },
-      sv: {
-        otsikko: "Netto lönekalkylator",
-        otsikkoAlateksti: "Räkna ut hur mycket pengar som blir kvar efter skatt",
-        palkka: "Månadslön (€)",
-        ika: "Ålder",
-        kunta: "Stad",
-        kirkko: "Jag tillhör kyrkan",
-        laske: "Beräkna",
-        kaateen: "Kvar (mån)",
-        vero: "Skatt (mån)",
-        veroprosentti: "Beräknad skattesats",
-        vuosiyhteenveto: "Årsöversikt",
-        vuositulo: "Årslön",
-        vuosivero: "Årlig skatt",
-        vuosinetto: "Kvar per år",
-        virhe: "Ange lön och ålder korrekt.",
-        varoitus: "Denna nettolönskalkylator är vägledande. Den ersätter inte officiell skatterådgivning eller skatteberäknare. Dina slutliga skatteuppgifter kan skilja sig från kalkylatorns resultat. Utvecklaren ansvarar inte för eventuella fel eller konsekvenser av informationen i kalkylatorn. Observera! Kalkylatorn tar inte hänsyn till alla möjliga skatte- eller avdragssituationer (t.ex. personliga avdrag, pensionsavgifter eller andra särskilda fall).",
-        kuntaValinnat: ["Helsingfors", "Tammerfors", "Uleåborg", "Åbo", "Annat"]
-      },
-      en: {
-        otsikko: "Net Salary Calculator",
-        otsikkoAlateksti: "Calculate how much money you keep after taxes",
-        palkka: "Monthly Salary (€)",
-        ika: "Age",
-        kunta: "City",
-        kirkko: "I belong to the church",
-        laske: "Calculate",
-        kaateen: "Take-home (mo)",
-        vero: "Tax (mo)",
-        veroprosentti: "Estimated tax rate",
-        vuosiyhteenveto: "Yearly Summary",
-        vuositulo: "Annual Salary",
-        vuosivero: "Annual Tax",
-        vuosinetto: "Take-home per year",
-        virhe: "Please enter salary and age correctly.",
-        varoitus: "This net salary calculator is indicative. It does not replace official tax advice or calculators. Your final tax information may differ from the calculator results. The developer is not responsible for errors or consequences from the calculator. Note: The calculator does not consider all possible tax or deduction situations (e.g., personal deductions, pension contributions, or other special cases).",
-        kuntaValinnat: ["Helsinki", "Tampere", "Oulu", "Turku", "Other"]
-      }
-    };
+    <script>
+        const texts = {
+            fi: {
+                otsikko: "Nettopalkkalaskuri",
+                otsikkoAlateksti: "Laske, paljonko sinulle jää rahaa verojen jälkeen",
+                palkka: "Kuukausipalkka (€)",
+                ika: "Ikä",
+                kunta: "Kaupunki",
+                kirkko: "Kuulun kirkkoon",
+                laske: "Laske",
+                kaateen: "Käteen jää (kk)",
+                vero: "Vero & maksut (kk)",
+                veroprosentti: "Kok. veroprosentti",
+                vuosiyhteenveto: "Vuositiedot",
+                vuositulo: "Vuosipalkka",
+                vuosivero: "Vero & maksut vuodessa",
+                vuosinetto: "Käteen vuodessa",
+                virhe: "Syötä palkka ja ikä oikein.",
+                varoitus: "Tämä nettolaskuri on **suuntaa-antava**. Se ei korvaa virallista veroneuvontaa tai Verohallinnon laskuria. Laskuri käyttää **arvioituja vuoden 2025 veroprosentteja** ja sisältää vain **yleisimmät lakisääteiset vähennykset** (TyEL, työttömyysvakuutus ja työtulovähennys). Se ei ota huomioon kaikkia henkilökohtaisia vähennyksiä (esim. matkakulut tai kotitalousvähennys) tai verokortin tulorajoja. Kehittäjä ei vastaa laskurin antamien tietojen virheellisyydestä.",
+                kuntaValinnat: ["Helsinki", "Tampere", "Oulu", "Turku", "Muu Suomi (Keskiarvo)"]
+            },
+            sv: {
+                otsikko: "Netto lönekalkylator",
+                otsikkoAlateksti: "Räkna ut hur mycket pengar som blir kvar efter skatt",
+                palkka: "Månadslön (€)",
+                ika: "Ålder",
+                kunta: "Stad",
+                kirkko: "Jag tillhör kyrkan",
+                laske: "Beräkna",
+                kaateen: "Kvar (mån)",
+                vero: "Skatt & avgifter (mån)",
+                veroprosentti: "Total skattesats",
+                vuosiyhteenveto: "Årsöversikt",
+                vuositulo: "Årslön",
+                vuosivero: "Skatt & avgifter per år",
+                vuosinetto: "Kvar per år",
+                virhe: "Ange lön och ålder korrekt.",
+                varoitus: "Denna nettolönskalkylator är **vägledande**. Den ersätter inte officiell skatterådgivning eller Skatteförvaltningens kalkylator. Kalkylatorn använder **uppskattade skattesatser för 2025** och inkluderar endast de **vanligaste lagstadgade avdragen** (ArPL, arbetslöshetsförsäkring och arbetsinkomstavdrag). Den tar inte hänsyn till alla personliga avdrag (t.ex. resekostnader eller hushållsavdrag) eller skattekortets inkomstgränser. Utvecklaren ansvarar inte för felaktigheter i kalkylatorns resultat.",
+                kuntaValinnat: ["Helsingfors", "Tammerfors", "Uleåborg", "Åbo", "Övriga Finland (Genomsnitt)"]
+            },
+            en: {
+                otsikko: "Net Salary Calculator",
+                otsikkoAlateksti: "Calculate how much money you keep after taxes",
+                palkka: "Monthly Salary (€)",
+                ika: "Age",
+                kunta: "City",
+                kirkko: "I belong to the church",
+                laske: "Calculate",
+                kaateen: "Take-home (mo)",
+                vero: "Tax & Fees (mo)",
+                veroprosentti: "Total tax rate",
+                vuosiyhteenveto: "Yearly Summary",
+                vuositulo: "Annual Salary",
+                vuosivero: "Annual Tax & Fees",
+                vuosinetto: "Take-home per year",
+                virhe: "Please enter salary and age correctly.",
+                varoitus: "This net salary calculator is **indicative**. It does not replace official tax advice or the Tax Administration's calculator. The calculator uses **estimated 2025 tax rates** and includes only the **most common statutory deductions** (TyEL, unemployment insurance, and earned income deduction). It does not consider all personal deductions (e.g., travel costs or household deduction) or tax card income limits. The developer is not responsible for errors in the calculator's results.",
+                kuntaValinnat: ["Helsinki", "Tampere", "Oulu", "Turku", "Rest of Finland (Average)"]
+            }
+        };
 
-    function vaihdaKieli() {
-      const lang = document.getElementById("language").value;
-      const t = texts[lang];
+        function vaihdaKieli() {
+            const lang = document.getElementById("language").value;
+            const t = texts[lang];
 
-      document.getElementById("otsikko").innerText = t.otsikko;
-      document.getElementById("otsikkoAlateksti").innerText = t.otsikkoAlateksti;
-      document.getElementById("labelPalkka").innerText = t.palkka;
-      document.getElementById("labelIka").innerText = t.ika;
-      document.getElementById("labelKunta").innerText = t.kunta;
-      document.getElementById("labelKirkko").innerText = t.kirkko;
-      document.getElementById("laskeNappi").innerText = t.laske;
-      document.getElementById("varoitus").innerText = t.varoitus;
+            document.getElementById("otsikko").innerText = t.otsikko;
+            document.getElementById("otsikkoAlateksti").innerText = t.otsikkoAlateksti;
+            document.getElementById("labelPalkka").innerText = t.palkka;
+            document.getElementById("labelIka").innerText = t.ika;
+            document.getElementById("labelKunta").innerText = t.kunta;
+            document.getElementById("labelKirkko").innerText = t.kirkko;
+            document.getElementById("laskeNappi").innerText = t.laske;
+            document.getElementById("varoitus").innerHTML = t.varoitus;
 
-      // Päivitä kunta-valikon vaihtoehdot
-      const kuntaSelect = document.getElementById("kunta");
-      kuntaSelect.innerHTML = "";
-      t.kuntaValinnat.forEach(k => {
-        const option = document.createElement("option");
-        option.value = k.includes("Muu") || k.includes("Other") ? "Muu" : k;
-        option.text = k;
-        kuntaSelect.appendChild(option);
-      });
+            const kuntaSelect = document.getElementById("kunta");
+            const selectedValue = kuntaSelect.value;
+            kuntaSelect.innerHTML = "";
+            t.kuntaValinnat.forEach((k, index) => {
+                const option = document.createElement("option");
+                option.value = ["Helsinki", "Tampere", "Oulu", "Turku"][index] || "Muu";
+                option.text = k;
+                if(option.value === selectedValue) {
+                    option.selected = true;
+                }
+                kuntaSelect.appendChild(option);
+            });
 
-      if (document.getElementById("tulos").innerHTML.trim() !== "") {
-        laske();
-      }
-    }
+            if (document.getElementById("tulos").style.opacity === "1") {
+                laske();
+            }
+        }
 
-    function laske() {
-      const palkka = parseFloat(document.getElementById("palkka").value);
-      const ika = parseInt(document.getElementById("ika").value);
-      const kunta = document.getElementById("kunta").value;
-      const kirkollisvero = document.getElementById("kirkollisvero").checked;
-      const tulosDiv = document.getElementById("tulos");
-      const lang = document.getElementById("language").value;
-      const t = texts[lang];
+        function laskeTyotuloVaehennys(tulo) {
+            const maxVaehennys = 3225; // Enimmäismäärä 2025
 
-      if (isNaN(palkka) || palkka < 0 || isNaN(ika) || ika < 0) {
-        alert(t.virhe);
-        return;
-      }
+            let vaehennys = tulo * 0.12;
+            vaehennys = Math.min(vaehennys, maxVaehennys);
 
-      const kunnallisverot = {
-        "Helsinki": 0.175,
-        "Tampere": 0.19,
-        "Oulu": 0.205,
-        "Turku": 0.20,
-        "Muu": 0.21
-      };
-      let kunnallisvero = kunnallisverot[kunta] || 0.20;
-      if (kirkollisvero) kunnallisvero += 0.015;
+            const pienennysraja = 125200;
+            if (tulo > pienennysraja) {
+                vaehennys -= (tulo - pienennysraja) * 0.045;
+            }
 
-      let tyel = (ika >= 53 && ika <= 62) ? 0.0865 : 0.0715;
-      const tyottomyysvakuutus = 0.015;
-      const sairausvakuutus = 0.015;
+            return Math.max(0, vaehennys);
+        }
 
-      const veroSumma = palkka * (kunnallisvero + tyel + tyottomyysvakuutus + sairausvakuutus);
-      const netto = palkka - veroSumma;
-      const veroprosentti = (veroSumma / palkka) * 100;
+        function laske() {
+            const palkka = parseFloat(document.getElementById("palkka").value);
+            const ika = parseInt(document.getElementById("ika").value);
+            const kuntaValittu = document.getElementById("kunta").value;
+            const kirkollisveroChecked = document.getElementById("kirkollisvero").checked;
+            const tulosDiv = document.getElementById("tulos");
+            const t = texts[document.getElementById("language").value];
 
-      const vuosipalkka = palkka * 12;
-      const vuosivero = veroSumma * 12;
-      const vuosinetto = netto * 12;
+            if (isNaN(palkka) || palkka < 0 || isNaN(ika) || ika < 0) {
+                alert(t.virhe);
+                return;
+            }
 
-      tulosDiv.innerHTML = `
-        <div class="text-2xl font-bold">${t.kaateen}: ${netto.toFixed(2)} €</div>
-        <div class="text-lg font-semibold mt-2">${t.vero}: ${veroSumma.toFixed(2)} €</div>
-        <div class="text-lg font-semibold mt-1">${t.veroprosentti}: ${veroprosentti.toFixed(1)}%</div>
+            // --- 1. Lakisääteiset työntekijämaksut (2025 arvio) ---
+            const tyottomyysvakuutus = 0.0079;
+            const sairaanhoitomaksu = 0.0106;
 
-        <hr class="my-4 border-gray-300">
+            let tyelProsentti;
+            if (ika >= 53 && ika <= 62) {
+                tyelProsentti = 0.0865;
+            } else if (ika >= 17 && ika < 68) {
+                tyelProsentti = 0.0715;
+            } else {
+                tyelProsentti = 0.00;
+            }
 
-        <div class="text-lg font-bold mb-2 text-gray-900">${t.vuosiyhteenveto}</div>
-        <div class="text-base font-semibold text-gray-900">${t.vuositulo}: ${vuosipalkka.toFixed(2)} €</div>
-        <div class="text-base font-semibold text-gray-900">${t.vuosivero}: ${vuosivero.toFixed(2)} €</div>
-        <div class="text-base font-semibold text-gray-900">${t.vuosinetto}: ${vuosinetto.toFixed(2)} €</div>
-      `;
+            const pakollisetMaksutProsentti = tyelProsentti + tyottomyysvakuutus + sairaanhoitomaksu;
+            const pakollisetMaksutKK = palkka * pakollisetMaksutProsentti;
 
-      tulosDiv.style.opacity = "1";
-      tulosDiv.style.transform = "translateY(0)";
-    }
+            const vuosipalkka = palkka * 12;
+            const vuosipakollisetMaksut = pakollisetMaksutKK * 12;
 
-    window.onload = () => {
-      vaihdaKieli();
-    };
-  </script>
+            // --- 2. Kunta- ja kirkollisveroprosentit (2025 arvio) ---
+            const kunnallisverot = { "Helsinki": 0.074, "Tampere": 0.076, "Oulu": 0.079, "Turku": 0.078, "Muu": 0.080 };
+            const kirkollisverot = { "Helsinki": 0.010, "Tampere": 0.010, "Oulu": 0.012, "Turku": 0.010, "Muu": 0.012 };
+
+            const kuntaVeroProsentti = kunnallisverot[kuntaValittu] || kunnallisverot["Muu"];
+            let kirkkoVeroProsentti = 0.00;
+            if (kirkollisveroChecked) {
+                kirkkoVeroProsentti = kirkollisverot[kuntaValittu] || kirkollisverot["Muu"];
+            }
+
+            // --- 3. Valtion progressiivinen verotaulukko (2025 arvio) ---
+            const valtionVeroTaulukko = [
+                { raja: 21200, veroAlarajanKohdalla: 0, marginaaliVero: 0.1264 },
+                { raja: 31500, veroAlarajanKohdalla: 2679.68, marginaaliVero: 0.1900 },
+                { raja: 52100, veroAlarajanKohdalla: 4636.68, marginaaliVero: 0.3025 },
+                { raja: 88200, veroAlarajanKohdalla: 10868.18, marginaaliVero: 0.3400 },
+                { raja: 150000, veroAlarajanKohdalla: 23142.18, marginaaliVero: 0.4175 },
+                { raja: Infinity, veroAlarajanKohdalla: 48943.68, marginaaliVero: 0.4425 }
+            ];
+
+            // --- 4. Verotettavan ansiotulon laskenta ---
+            const verotettavaAnsiotulo = vuosipalkka - vuosipakollisetMaksut;
+
+            // --- 5. Lasketaan Valtion progressiivinen tulovero ---
+            let valtionVero = 0;
+            for (let i = 0; i < valtionVeroTaulukko.length; i++) {
+                const luokka = valtionVeroTaulukko[i];
+                if (verotettavaAnsiotulo > luokka.raja) {
+                    valtionVero = luokka.veroAlarajanKohdalla;
+                } else {
+                    const edellinenRaja = i > 0 ? valtionVeroTaulukko[i - 1].raja : 0;
+                    const verotettavaOsa = verotettavaAnsiotulo - edellinenRaja;
+                    valtionVero += verotettavaOsa * luokka.marginaaliVero;
+                    break;
+                }
+            }
+
+            // --- 6. Lasketaan Kunnallisvero ja Kirkollisvero Perusvähennyksen jälkeen ---
+            const maxPerusVaehennys = 3870;
+            let perusVaehennys = Math.min(maxPerusVaehennys, verotettavaAnsiotulo);
+
+            const perusVaehennysPienennysRaja = 14000;
+            if (verotettavaAnsiotulo > perusVaehennysPienennysRaja) {
+                perusVaehennys = maxPerusVaehennys - (verotettavaAnsiotulo - perusVaehennysPienennysRaja) * 0.18;
+            }
+            perusVaehennys = Math.max(0, perusVaehennys);
+
+            const kuntaKirkkoVerotettavaTulo = Math.max(0, verotettavaAnsiotulo - perusVaehennys);
+            const kuntaKirkkoVero = kuntaKirkkoVerotettavaTulo * (kuntaVeroProsentti + kirkkoVeroProsentti);
+
+            // --- 7. Verot yhteensä ennen Työtulovähennystä ---
+            const veroEnnenVaehennyksia = valtionVero + kuntaKirkkoVero;
+
+            // --- 8. Työtulovähennyksen (TYÖTV) vaikutus ---
+            const tyotuloVaehennysSumma = laskeTyotuloVaehennys(vuosipalkka);
+
+            const vuosiveroYhteensa = Math.max(0, veroEnnenVaehennyksia - tyotuloVaehennysSumma);
+
+            // --- 9. Lopputulokset ---
+            const vuosiverotJaMaksut = vuosipakollisetMaksut + vuosiveroYhteensa;
+            const vuosinetto = vuosipalkka - vuosiverotJaMaksut;
+
+            const netto = vuosinetto / 12;
+            const verotJaMaksutKK = vuosiverotJaMaksut / 12;
+            const veroprosentti = (verotJaMaksutKK / palkka) * 100;
+
+            // Tulostus
+            tulosDiv.innerHTML = `
+                <div class="text-3xl font-extrabold text-green-700">${t.kaateen}: ${netto.toFixed(2)} €</div>
+                <div class="text-lg font-semibold mt-3 text-gray-700">${t.vero}: ${verotJaMaksutKK.toFixed(2)} €</div>
+                <div class="text-lg font-semibold text-gray-700">${t.veroprosentti}: ${veroprosentti.toFixed(1)}%</div>
+
+                <hr class="my-4 border-green-300">
+
+                <div class="text-xl font-bold mb-2 text-green-800">${t.vuosiyhteenveto}</div>
+                <div class="text-base font-medium text-gray-700">${t.vuositulo}: ${vuosipalkka.toFixed(2)} €</div>
+                <div class="text-base font-medium text-gray-700">${t.vuosivero}: ${vuosiverotJaMaksut.toFixed(2)} €</div>
+                <div class="text-base font-medium text-gray-700">${t.vuosinetto}: ${vuosinetto.toFixed(2)} €</div>
+            `;
+
+            tulosDiv.style.opacity = "1";
+            tulosDiv.style.transform = "translateY(0)";
+        }
+
+        window.onload = () => {
+            vaihdaKieli();
+        };
+    </script>
 
 </body>
 </html>
